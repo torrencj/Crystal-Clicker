@@ -1,5 +1,3 @@
-// Man you gotta change this shit so that it's so you try to get to the target in the fewest
-// clicks without going over. Maybe ditch the colors for now. Fun idea, but sheesh.
 
 $(document).ready(function() {
 
@@ -29,11 +27,9 @@ $(document).ready(function() {
   //generate a random int from 0 - max
   function random(max) {
     return Math.floor(Math.random() * (max + 1));
-    // return 0;
   }
 
   function reloadcrystals() {
-    // console.log("reloading crystals");
     $("button").each(function(i) {
       newcrystal(this.id);
     });
@@ -62,12 +58,6 @@ $(document).ready(function() {
         target -= data.value;
         var damage = clicks + Math.abs(overshoot);
 
-        // console.log(health);
-        // $(".score-screen").append("<p> You took " + damage+ " damage</p>")
-
-        // health -= (Math.abs(overshoot)+clicks);
-        // console.log(health);
-
         if (overshoot < 0) {
           health -= (Math.abs(overshoot)+clicks);
           $(".score-screen").append("<p> You took " + damage+ " damage</p>")
@@ -77,12 +67,6 @@ $(document).ready(function() {
           $(".score-screen").append("<p> You took no damage!</p>")
           $("#win-msg").append("<h3>Perfect</h3>");
         }
-
-        // } else if (overshoot == 0) {
-        //   // health -= (Math.abs(overshoot)+clicks);
-        //   // $(".score-screen").append("<p> You took " + damage+ " damage</p>")
-        //   $("#win-msg").append("<h3>Perfect</h3>");
-        // }
 
         if (target <= 0) {
           $(".target").empty();
@@ -116,10 +100,8 @@ function newcrystal(id) {
     item.data(crystal);
 
     if (crystal.color == "white") {
-      // console.log("I changed the color");
       item.css("color","black");
     } else {
-      // console.log("I changed the color");
       item.css("color","white")
     }
 }
@@ -133,7 +115,6 @@ function reset() {
 }
 
 $("button").on("click", function(event) {
-  // console.log(this.id);
   clicks++;
   if ($(this).data().isNotClicked && target >0) {
     updategame($(this).data());
