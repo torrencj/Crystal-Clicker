@@ -8,6 +8,43 @@ img {
   height: 200px;
 }
 
+
+#progressBar {
+    width: 400px;
+    height: 22px;
+    margin-right: 0;
+    float: right;
+    /*border: 1px solid #111;*/
+    /*background-color: #292929;*/
+}
+
+#progressBar div {
+    height: 100%;
+    color: #fff;
+    text-align: right;
+    line-height: 22px; /* same as #progressBar height if we want text middle aligned */
+    width: 0;
+    background-color: #0099ff;
+}
+
+
+
+.healthbar {
+  background: red;
+  height: 20px;
+}
+
+.titlebar {
+  margin: 0 auto;
+  max-width: 80%;
+}
+
+#win-msg {
+  text-align: center;
+  font-size: 5em;
+  /*visibility: hidden;*/
+}
+
 .target {
   text-align: center;
   font-size: 15em;

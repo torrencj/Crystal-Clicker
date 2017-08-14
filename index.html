@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Crystal Clicker</title>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
   <link rel="stylesheet" href="assets/css/style.css">
 
 
@@ -15,20 +16,37 @@
 
   <!-- <main> -->
     <header class="titlebar">
-      <h1>crystal clicker</h1>
+      <h1>crystal clicker </h1>
+      <p>Instructions: You take damage each game equal to your clicks + overshoot. How long can you last?</p>
     </header>
 
     <div class="maingame">
+      <!-- <div class="healthbar">
+      </div> -->
+
       <div class="score-screen">
+        <span>Health: </span><span class="health">
+
+        </span>
+        <!-- <div id="progressBar"><div></div></div> -->
+
         <!-- Holds some random score and stuff -->
-        <h3>score</h3>
+        <div>
+          <span>Clicks: </span>
+          <span class="clicks"></span>
+        </div>
+        <div>
+          <span>Round: </span>
+          <span class="round"></span>
+        </div>
       </div>
       <div class="target-screen">
         <h3 class="target">target screen</h3>
+        <div id="win-msg"></div>
         <!-- <img src="http://placehold.it/400x400" alt=""> -->
         <!-- Holds a picture of the enemy we're trying to defeat -->
       </div>
-      <h3>crystals:</h3>
+      <!-- <h3>crystals:</h3> -->
 
       <div class="crystal-screen">
         <!-- Shows 4 available crystals. -->

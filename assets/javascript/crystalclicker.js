@@ -1,9 +1,13 @@
+// Man you gotta change this shit so that it's so you try to get to the target in the fewest
+// clicks without going over. Maybe ditch the colors for now. Fun idea, but sheesh.
 
 $(document).ready(function() {
 
-var target = 0;
-// var buttonsLocked = false;
-
+  var target = 0;
+  var clicks;
+  var overshoot;
+  var health = 100;
+  var round = 1;
   var colors = [
   "red",
   "blue",
@@ -15,105 +19,76 @@ var target = 0;
   "black"
 ];
 
-  var damagevalues = [1,2,3,5,8,13,21,34];
+
+  var values = [1,2,3,5,8,13,21,34];
+
   updategame();
   reloadcrystals();
 
   //generate a random int from 0 - max
   function random(max) {
-    return Math.floor(Math.random() * max + 1);
+    return Math.floor(Math.random() * (max + 1));
+    // return 0;
   }
 
   function reloadcrystals() {
-    console.log("reloading crystals");
+    // console.log("reloading crystals");
     $("button").each(function(i) {
-
-    if (true) {
       newcrystal(this.id);
-    }
-    }); //each function
+    });
   }
 
+  function updategame(data) {
 
-function updategame(data) {
-  console.log(arguments.length);
-  if (arguments.length == 0) { //default behavior
-    //set up a new game
-    target = random(100);
-    console.log(target);
-    $(".target").text(target);
+    if (arguments.length == 0) { //default behavior
+      //set up a new game
+      target = random(100);
+      clicks = 0;
+      overshoot = 0;
 
-  } else {
-    //update
-    console.log("updating game");
-    var damage = effectCalc(data.color, data.damage);
-    $(".score-screen").html("You did " + damage + " " + data.color + " damage!")
-    target -= damage;
-    if (target <= 0) {
-      $(".target").empty();
-      console.log($(".target").css);
-      $(".target").css("font-size: 1em");
-      $(".target").text("You won.");
+      $(".score-screen p").empty();
+      $(".target").text(target);
+      $(".health").text(health);
+      $(".round").text(round);
+      $("#win-msg").empty();
+
     } else {
-    $(".target").text(target);
-  }
-}
-}
+      overshoot = target - data.value;
+      target -= data.value;
+      $(".health").text(health);
 
-// enemy types -- weakness:
-// flesh -- red
-// metal -- yellow
-// magma -- blue
-// magic -- purple
-//
-// special:
-// black -- hurts user
-// white -- heals user?
+      if (overshoot < 0) {
+        overshoot = Math.abs(overshoot)
+        health -= (overshoot+clicks);
+        $(".score-screen").append("<p> You clicked " + clicks + " times and overshot by "+overshoot+"</p>")
+        $("#win-msg").append("<h3>Reset</h3>");
+      } else if (overshoot == 0) {
+        overshoot = Math.abs(overshoot)
+        health -= (overshoot+clicks);
+        $(".score-screen").append("<p> You clicked " + clicks + " times and overshot by "+overshoot+"</p>")
+        $("#win-msg").append("<h3>Perfect</h3>");
+      }
 
+      if (target <= 0) {
+        $(".target").empty();
 
-
-  function effectCalc(color, damage) {
-    switch (color) {
-
-      case "red":
-        return damage;
-      break;
-
-      case "blue":
-        return damage;
-      break;
-
-      case "darkcyan":
-        return damage;
-      break;
-
-      case "green":
-        return damage;
-      break;
-
-      case "purple":
-        return damage;
-      break;
-
-      case "orange":
-        return damage;
-      break;
-
-      case "white":
-        return damage;
-      break;
-
-      case "black":
-        return damage;
-      break;
-
-
-      default:
+      } else {
+      $(".target").text(target);
 
     }
+}
 
+  $(".clicks").text(clicks)
 
 }
+
+
+// function progress(percent, $element) {
+//     var progressBarWidth = percent * $element.width() / 100;
+//
+//     $element.find('div').animate({ width: progressBarWidth }, 500).html(percent + "% ");
+// }
+
 
 function newcrystal(id) {
 
@@ -123,46 +98,48 @@ function newcrystal(id) {
 
   var crystal = {
     "color": colors[random(colors.length - 1)],
-    "damage": damagevalues[random(colors.length - 1)],
+    "value": values[random(colors.length - 1)],
     "isNotClicked" : true
   }
 
     var item = $("#"+id);
 
-    // item.data(crystal);
-    // console.log("I'm doing something.");
     item.css("background-color", crystal.color);
-    item.text(crystal.damage);
+    item.text(crystal.value);
     item.data(crystal);
 
     if (crystal.color == "white") {
-      console.log("I changed the color");
+      // console.log("I changed the color");
       item.css("color","black");
     } else {
-      console.log("I changed the color");
+      // console.log("I changed the color");
       item.css("color","white")
     }
 }
 
 $("button").on("click", function(event) {
-  // console.log(event.currentTarget.id);
-  console.log(this.id);
-  // console.log(this.isNotClicked);
-
-// console.log($(this).data().isNotClicked);
-
-  if ($(this).data().isNotClicked) {
+  // console.log(this.id);
+  clicks++;
+  if ($(this).data().isNotClicked && target >0) {
     updategame($(this).data());
-    // console.log($(this).id);
-
     newcrystal(this.id);
-
   }
 
 
 }); //onclick event
 $(".target-screen").on("click", function(event) {
-  reloadcrystals();
+  if (target <= 0){
+    round++;
+    updategame();
+    reloadcrystals();
+    if (health <=0){
+      $("#win-msg").append("<h3>Game over.</h3>");
+      gameover = 1; //TODO! game over state
+    }
+
+}
 }); //onclick event
 
-});
+
+
+}); //document ready function
