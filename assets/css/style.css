@@ -27,7 +27,9 @@ img {
     background-color: #0099ff;
 }
 
-
+.game-over {
+  font-size: 2em;
+}
 
 .healthbar {
   background: red;

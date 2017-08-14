@@ -6,8 +6,10 @@ $(document).ready(function() {
   var target = 0;
   var clicks;
   var overshoot;
-  var health = 100;
+  var health = 10;
   var round = 1;
+  var gameover = false;
+
   var colors = [
   "red",
   "blue",
@@ -18,7 +20,6 @@ $(document).ready(function() {
   "white",
   "black"
 ];
-
 
   var values = [1,2,3,5,8,13,21,34];
 
@@ -40,7 +41,7 @@ $(document).ready(function() {
 
   function updategame(data) {
 
-    if (arguments.length == 0) { //default behavior
+    if (arguments.length == 0) { //default behavior clear everything
       //set up a new game
       target = random(100);
       clicks = 0;
@@ -52,43 +53,49 @@ $(document).ready(function() {
       $(".round").text(round);
       $("#win-msg").empty();
 
-    } else {
-      overshoot = target - data.value;
-      target -= data.value;
-      $(".health").text(health);
-
-      if (overshoot < 0) {
-        overshoot = Math.abs(overshoot)
-        health -= (overshoot+clicks);
-        $(".score-screen").append("<p> You clicked " + clicks + " times and overshot by "+overshoot+"</p>")
-        $("#win-msg").append("<h3>Reset</h3>");
-      } else if (overshoot == 0) {
-        overshoot = Math.abs(overshoot)
-        health -= (overshoot+clicks);
-        $(".score-screen").append("<p> You clicked " + clicks + " times and overshot by "+overshoot+"</p>")
-        $("#win-msg").append("<h3>Perfect</h3>");
-      }
-
-      if (target <= 0) {
-        $(".target").empty();
+    } else if (health <=0) {
+          gameover = true
+          $(".health").text(health);
 
       } else {
-      $(".target").text(target);
+        overshoot = target - data.value;
+        target -= data.value;
+        var damage = clicks + Math.abs(overshoot);
 
-    }
+        // console.log(health);
+        // $(".score-screen").append("<p> You took " + damage+ " damage</p>")
+
+        // health -= (Math.abs(overshoot)+clicks);
+        // console.log(health);
+
+        if (overshoot < 0) {
+          health -= (Math.abs(overshoot)+clicks);
+          $(".score-screen").append("<p> You took " + damage+ " damage</p>")
+          $("#win-msg").append("<h3>Round "+round+"</h3>");
+
+        } else if (overshoot == 0) {
+          $(".score-screen").append("<p> You took no damage!</p>")
+          $("#win-msg").append("<h3>Perfect</h3>");
+        }
+
+        // } else if (overshoot == 0) {
+        //   // health -= (Math.abs(overshoot)+clicks);
+        //   // $(".score-screen").append("<p> You took " + damage+ " damage</p>")
+        //   $("#win-msg").append("<h3>Perfect</h3>");
+        // }
+
+        if (target <= 0) {
+          $(".target").empty();
+
+        } else {
+        $(".target").text(target);
+
+      }
+  }
+
+    $(".clicks").text(clicks)
+
 }
-
-  $(".clicks").text(clicks)
-
-}
-
-
-// function progress(percent, $element) {
-//     var progressBarWidth = percent * $element.width() / 100;
-//
-//     $element.find('div').animate({ width: progressBarWidth }, 500).html(percent + "% ");
-// }
-
 
 function newcrystal(id) {
 
@@ -117,6 +124,14 @@ function newcrystal(id) {
     }
 }
 
+function reset() {
+  round = 1;
+  health = 100;
+  gameover = false;
+  updategame();
+  reloadcrystals();
+}
+
 $("button").on("click", function(event) {
   // console.log(this.id);
   clicks++;
@@ -128,16 +143,23 @@ $("button").on("click", function(event) {
 
 }); //onclick event
 $(".target-screen").on("click", function(event) {
-  if (target <= 0){
+  console.log(health);
+  if (gameover) {
+    reset();
+  }
+  if (health <= 0){
+    $(".target p").empty();
+    $(".health").text(health);
+    $(".target").text('');
+    $(".target").append('<p style="font-size: 24px">Game over.</p>')
+    gameover = true;
+
+  } else if (target <= 0) {
     round++;
     updategame();
     reloadcrystals();
-    if (health <=0){
-      $("#win-msg").append("<h3>Game over.</h3>");
-      gameover = 1; //TODO! game over state
-    }
+  }
 
-}
 }); //onclick event
 
 
